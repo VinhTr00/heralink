@@ -1,0 +1,3 @@
+../drvs/spi_driver.c:11:9:spi_read	1
+../drvs/spi_driver.c:16:9:spi_read_write	1
+../drvs/spi_driver.c:21:6:spi_set_cs	1
