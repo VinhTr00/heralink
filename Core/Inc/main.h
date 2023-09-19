@@ -88,6 +88,10 @@ void Error_Handler(void);
 #define MAX_RELEARN_GPIO_Port GPIOD
 #define MAX_CHG_Pin GPIO_PIN_2
 #define MAX_CHG_GPIO_Port GPIOD
+#define BATSEL1_BT_Pin GPIO_PIN_3
+#define BATSEL1_BT_GPIO_Port GPIOD
+#define BATSEL2_BT_Pin GPIO_PIN_4
+#define BATSEL2_BT_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

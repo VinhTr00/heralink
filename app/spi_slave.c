@@ -19,24 +19,28 @@
 /* Private function prototypes -----------------------------------------------*/
 static void SlTask_main(void *argument);
 static void SlTask_encode(uint8_t *packet);
+static uint8_t SlDecode_register(uint8_t *RxData);
+
 /* Private variables ---------------------------------------------------------*/
 static SPIHandle spi_handle = {
 		.CS_Pin = SPI1_NSS_Pin,
 		.CS_port = SPI1_NSS_GPIO_Port,
 		.hspi = &hspi1
 };
-static uint8_t RxBuffer[LEN_BUFFER], shared_memory[200];
-uint8_t TxBuffer[LEN_BUFFER];
-
+static uint8_t TxBuffer[LEN_BUFFER], RxBuffer[LEN_BUFFER], shared_memory[200], dummy_read_write[LEN_BUFFER];
 uint64_t counter_error = 0;
-uint16_t bat1_vol;
 static bool spi_ready = false;
 
-osThreadId_t SlaveTask;
 osEventFlagsId_t Slave_ready_id;
+
+enum {
+	WRITE_FLAG,
+	READ_FLAG
+};
 
 int SlTask_init(void)
 {
+	osThreadId_t SlaveTask;
 	const osThreadAttr_t SlaveTask_attributes = {
 	  .name = "SlaveTask",
 	  .priority = (osPriority_t) osPriorityNormal,
@@ -51,27 +55,40 @@ int SlTask_init(void)
 
 static void SlTask_main(void *argument)
 {
-	spi_read(&spi_handle, RxBuffer, 1);
-//	spi_read_write(&spi_handle, (uint8_t *)TxBuffer, &RxBuffer[0], 1);
-	uint8_t *tempBuffer = shared_memory;
+//	spi_read(&spi_handle, RxBuffer, 1);
+//	spi_read_write(&spi_handle, dummy_read_write, RxBuffer, 1);
+	uint8_t *tempBuffer, len;
 	while (1){
-//		if (RxBuffer[0] == 0x)
-//		bat1_vol = AdcGet_voltage(VOLTAGE_BAT1);
-//		TxBuffer[BAT1_VOLTAGE_LOW_BYTE - BAT1_CURRENT_LOW_BYTE] = bat1_vol;
-//		TxBuffer[BAT1_VOLTAGE_HIGH_BYTE - BAT1_CURRENT_LOW_BYTE] = bat1_vol >> 8;
-//		sprintf((char *)TxBuffer, "Slave send: %d", counter);
-//		osDelay(1000);
-
 		/* Test */
 		SlTask_encode(shared_memory);
 		osEventFlagsWait(Slave_ready_id, 0xDD, osFlagsWaitAny, osWaitForever);
-		for (uint8_t  i = BAT1_VOLTAGE_LOW_BYTE; i < POWER_WARNING + 1; i++){
-			if (RxBuffer[0] == i){
-				tempBuffer = &shared_memory[i];
-				uint8_t len = POWER_WARNING - i;
-				spi_read_write(&spi_handle, tempBuffer, shared_memory, len);
-//				HAL_SPI_Transmit_DMA(&spi_handle, tempBuffer, len);
-				break;
+		uint8_t flag_decode = SlDecode_register(&RxBuffer[0]);
+		if (flag_decode == WRITE_FLAG){
+			for (uint8_t i = LOW_VOLTAGE_LOW_BYTE; i < BUZZER_ENABLE + 1; i++){
+				if (RxBuffer[0] == i){
+					tempBuffer = &shared_memory[i];
+					len = 2;
+					spi_read_write(&spi_handle, dummy_read_write, tempBuffer, len);
+					break;
+				}
+			}
+		}
+		else {
+			for (uint8_t i = BAT1_VOLTAGE_LOW_BYTE; i < POWER_WARNING + 1; i++){
+				if (RxBuffer[0] == i){
+					tempBuffer = &shared_memory[i];
+					len = POWER_WARNING + 1 - i;
+					spi_read_write(&spi_handle, tempBuffer, dummy_read_write, len);
+					break;
+				}
+			}
+			for (uint8_t i = LOW_VOLTAGE_LOW_BYTE; i < BUZZER_ENABLE + 1; i++){
+				if (RxBuffer[0] == i){
+					tempBuffer = &shared_memory[i];
+					len = BUZZER_ENABLE + 1 - i;
+					spi_read_write(&spi_handle, tempBuffer, dummy_read_write, len);
+					break;
+				}
 			}
 		}
 	}
@@ -80,21 +97,21 @@ static void SlTask_main(void *argument)
 static void SlTask_encode(uint8_t *packet)
 {
 	uint8_t index_packet = BAT1_VOLTAGE_LOW_BYTE;
-	for (uint8_t i = BAT1_VOLTAGE_LOW_BYTE; i <= SYS_VOLTAGE_HIGH_BYTE + 1; i+=2)
+	for (uint8_t i = BAT1_VOLTAGE_LOW_BYTE; i <= SYS_VOLTAGE_HIGH_BYTE; i+=2)
 	{
 		packet[i] = AdcGet_voltage(index_packet - BAT1_VOLTAGE_LOW_BYTE);
 		packet[i+1] = AdcGet_voltage(index_packet - BAT1_VOLTAGE_LOW_BYTE) >> 8;
 		index_packet++;
 	}
 	index_packet = AIR_TEMPERATURE_LOW_BYTE;
-	for (uint8_t i = AIR_TEMPERATURE_LOW_BYTE; i <= BAT2_TEMPERATURE_HIGH_BYTE + 1; i+=2)
+	for (uint8_t i = AIR_TEMPERATURE_LOW_BYTE; i <= BAT2_TEMPERATURE_HIGH_BYTE; i+=2)
 	{
 		packet[i]= AdcGet_temperature(index_packet - AIR_TEMPERATURE_LOW_BYTE);
 		packet[i+1] = AdcGet_temperature(index_packet - AIR_TEMPERATURE_LOW_BYTE) >> 8;
 		index_packet++;
 	}
 	index_packet = SYS_CURRENT_LOW_BYTE;
-	for (uint8_t i = SYS_CURRENT_LOW_BYTE; i <= CHG_CURRENT_HIGH_BYTE + 1; i+=2)
+	for (uint8_t i = SYS_CURRENT_LOW_BYTE; i <= CHG_CURRENT_HIGH_BYTE; i+=2)
 	{
 		packet[i]= AdcGet_current(index_packet - SYS_CURRENT_LOW_BYTE);
 		packet[i+1] = AdcGet_current(index_packet - SYS_CURRENT_LOW_BYTE) >> 8;
@@ -102,15 +119,14 @@ static void SlTask_encode(uint8_t *packet)
 	}
 }
 
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi){
-
-}
-
-void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-//	spi_read_write(&spi_handle, (uint8_t *)TxBuffer, &RxBuffer[myIndex], 1);
-//	myIndex++;
-
+static uint8_t SlDecode_register(uint8_t *RxData){
+	uint8_t tempData = *RxData & 0x7F;
+	if (tempData == *RxData){
+		return READ_FLAG;
+	}
+	else {
+		return WRITE_FLAG;
+	}
 }
 
 void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
@@ -126,20 +142,22 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
 //	spi_read_write(&spi_handle, (uint8_t *)TxBuffer, (uint8_t *)RxBuffer, LEN_BUFFER);
 }
 
-void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin){
+void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
+{
 	spi_ready = false;
 	memset(RxBuffer, 0, LEN_BUFFER);
 	HAL_SPI_DMAStop(spi_handle.hspi);
 	__HAL_RCC_SPI1_FORCE_RESET();
 	__HAL_RCC_SPI1_RELEASE_RESET();
-	spi_read_write(&spi_handle, (uint8_t *)TxBuffer, &RxBuffer[0], 1);
+//	spi_read_write(&spi_handle, (uint8_t *)TxBuffer, &RxBuffer[0], 1);
 }
 
 
-void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin){
+void HAL_GPIO_EXTI_Falling_Callback(uint16_t GPIO_Pin)
+{
 	spi_ready = true;
 	osEventFlagsSet(Slave_ready_id, 0xDD);
-//	spi_read_write(&spi_handle, &TxBuffer[index], &RxBuffer[index], 1);
+	spi_read_write(&spi_handle, &dummy_read_write, &RxBuffer[0], 1);
 
 }
 

@@ -9,13 +9,16 @@
 #include "gpio.h"
 
 static Max1538_t max1538 = {
-		.max1538_Port = GPIOD,
-		.BATSEL_Pin = MAX_BATSEL_Pin,
-		.CHG_Pin = MAX_CHG_Pin,
-		.state = MAX1538_STATE_IDLE
+	.max1538_Port = GPIOD,
+	.max1538_out_Port = GPIOB,
+	.batsel_Port = GPIOD,
+	.BATSEL1_Button = BATSEL1_BT_Pin,
+	.BATSEL2_Button = BATSEL2_BT_Pin,
+	.MaxCHG = MAX_CHG_Pin,
+	.MaxBATSEL = MAX_BATSEL_Pin,
+	.MaxRELRN = MAX_RELEARN_Pin,
+	.MaxOUT0 = MAX_OUT0_Pin,
+	.MaxOUT1 = MAX_OUT1_Pin,
+	.MaxOUT2 = MAX_OUT2_Pin,
 };
 
-void Max1538_set_state(Max1538State state){
-	max1538.state = state;
-	Max1538_write_input(max1538);
-}

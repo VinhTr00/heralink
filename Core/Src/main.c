@@ -27,9 +27,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "adc_convert.h"
-#include "spi_slave.h"
-#include "battery_controller.h"
+#include "heralink.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,16 +60,7 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-//uint16_t ADC_raw[3];
-//float Vref = 0;
-//uint8_t RecvBuff[28];
-//uint8_t TBuff[28];
-//void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-//{
-//	HAL_SPI_TransmitReceive_IT(&hspi2, TBuff, RecvBuff, 28);
-////	spi_read_write(&spi_handle, (uint8_t *)TBuff, (uint8_t *)RecvBuff, LEN_BUFFER);
-////	counter++;
-//}
+
 /* USER CODE END 0 */
 
 /**
@@ -107,12 +96,9 @@ int main(void)
   MX_ADC1_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-//  HAL_SPI_TransmitReceive_IT(&hspi2, TBuff, RecvBuff, 28);
-  SlTask_init();
-  AdcTask_init();
-  BattControllerTask_init();
-//  HAL_ADCEx_Calibration_Start(&hadc1);
-//  HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADC_raw, 3);
+
+  heralink_main_init();
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -127,9 +113,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  Vref = 3.0*VREFINT_CAL/ADC_raw[2];
-//	  VBat[0] = ADC_raw[0]*Vref*11/(4095);
-//	  HAL_Delay(500);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

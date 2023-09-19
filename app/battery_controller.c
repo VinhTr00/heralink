@@ -45,11 +45,11 @@ static void BattController_main(void *argument){
 		}
 		else if (voltage > VBAT_MAX){
 			flag_OVV = false;
-			Max1538_set_state(MAX1538_STATE_CHARGE_B);
+//			Max1538_set_state(MAX1538_STATE_CHARGE_B);
 		}
 		else if (voltage > V_THRESHOLD)
 		{
-			Max1538_set_state(MAX1538_STATE_CHARGE_A);
+//			Max1538_set_state(MAX1538_STATE_CHARGE_A);
 		}
 		osDelay(2000);
 	}

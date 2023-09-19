@@ -1,8 +1,7 @@
-../app/spi_slave.c:38:5:SlTask_init	48	static
-../app/spi_slave.c:52:13:SlTask_main	32	static
-../app/spi_slave.c:80:13:SlTask_encode	32	static
-../app/spi_slave.c:106:6:HAL_SPI_RxCpltCallback	16	static
-../app/spi_slave.c:110:6:HAL_SPI_TxRxCpltCallback	16	static
-../app/spi_slave.c:117:6:HAL_SPI_ErrorCallback	16	static
-../app/spi_slave.c:130:6:HAL_GPIO_EXTI_Rising_Callback	16	static
-../app/spi_slave.c:140:6:HAL_GPIO_EXTI_Falling_Callback	16	static
+../app/spi_slave.c:41:5:SlTask_init	48	static
+../app/spi_slave.c:56:13:SlTask_main	40	static
+../app/spi_slave.c:97:13:SlTask_encode	32	static
+../app/spi_slave.c:122:16:SlDecode_register	24	static
+../app/spi_slave.c:132:6:HAL_SPI_ErrorCallback	16	static
+../app/spi_slave.c:145:6:HAL_GPIO_EXTI_Rising_Callback	16	static
+../app/spi_slave.c:156:6:HAL_GPIO_EXTI_Falling_Callback	16	static

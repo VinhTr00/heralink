@@ -1,7 +1,7 @@
 app/battery_controller.o: ../app/battery_controller.c \
- /home/vinhtran/Documents/C-Project/heralink/app/inc/battery_controller.h \
- /home/vinhtran/Documents/C-Project/heralink/app/inc/max1538.h \
- /home/vinhtran/Documents/C-Project/heralink/drvs/inc/max1538_driver.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/battery_controller.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/max1538.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h \
  ../Core/Inc/stm32g0xx_hal_conf.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rcc.h \
@@ -50,13 +50,13 @@ app/battery_controller.o: ../app/battery_controller.c \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- /home/vinhtran/Documents/C-Project/heralink/app/inc/adc_convert.h \
- /home/vinhtran/Documents/C-Project/heralink/drvs/inc/adc_driver.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/adc_driver.h \
  ../Core/Inc/gpio.h ../Core/Inc/main.h \
- /home/vinhtran/Documents/C-Project/heralink/app/inc/max1538.h
-/home/vinhtran/Documents/C-Project/heralink/app/inc/battery_controller.h:
-/home/vinhtran/Documents/C-Project/heralink/app/inc/max1538.h:
-/home/vinhtran/Documents/C-Project/heralink/drvs/inc/max1538_driver.h:
+ C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/max1538.h
+C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/battery_controller.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/max1538.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rcc.h:
@@ -105,8 +105,8 @@ app/battery_controller.o: ../app/battery_controller.c \
 ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-/home/vinhtran/Documents/C-Project/heralink/app/inc/adc_convert.h:
-/home/vinhtran/Documents/C-Project/heralink/drvs/inc/adc_driver.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/adc_driver.h:
 ../Core/Inc/gpio.h:
 ../Core/Inc/main.h:
-/home/vinhtran/Documents/C-Project/heralink/app/inc/max1538.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/max1538.h:

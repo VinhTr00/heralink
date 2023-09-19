@@ -11,9 +11,4 @@
 #include "max1538_driver.h"
 
 
-
-void Max1538_set_state(Max1538State state);
-
-
-
 #endif /* _MAX1538_H_ */

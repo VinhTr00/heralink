@@ -18,12 +18,6 @@ typedef enum {
 	BATTERY_CONTROLLER_AC_ADAPTER_SEARCH
 } BatteryControllerState;
 
-typedef enum {
-	BATSEL_MODE_AUTO,
-	BATSEL_MODE_BAT1,
-	BATSEL_MODE_BAT2
-} BatselMode;
-
 int BattControllerTask_init(void);
 
 #endif /* _BATTERY_CONTROLLER_H_ */
