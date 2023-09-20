@@ -7,6 +7,7 @@
 
 #include "max1538.h"
 #include "gpio.h"
+#include "cmsis_os.h"
 
 static Max1538_t max1538 = {
 	.max1538_Port = GPIOD,
@@ -22,3 +23,18 @@ static Max1538_t max1538 = {
 	.MaxOUT2 = MAX_OUT2_Pin,
 };
 
+static void Max1538Task_main(void);
+
+
+/* Public functions ---------------------------------------------------------*/
+int Max1538_init(void)
+{
+	osThreadId_t Max1538Task;
+    const osThreadAttr_t Max1538Task_attributes = {
+        .name = "Max1538Task",
+        .priority = (osPriority_t) osPriorityNormal1,
+        .stack_size = 128 * 4
+    };
+	Max1538Task = osThreadNew(Max1538Task_main, NULL, &Max1538Task_attributes);
+	(void)Max1538Task;
+}

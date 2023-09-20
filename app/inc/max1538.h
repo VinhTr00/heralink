@@ -10,5 +10,6 @@
 
 #include "max1538_driver.h"
 
+int Max1538_init(void);
 
 #endif /* _MAX1538_H_ */
