@@ -1,5 +1,6 @@
 app/max1538.o: ../app/max1538.c \
  C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/max1538.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/shared_resource.h \
  C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h \
  ../Core/Inc/stm32g0xx_hal_conf.h \
@@ -38,8 +39,22 @@ app/max1538.o: ../app/max1538.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
- ../Core/Inc/gpio.h ../Core/Inc/main.h
+ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/shared_resource.h \
+ ../Core/Inc/gpio.h ../Core/Inc/main.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
+ ../Core/Inc/FreeRTOSConfig.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
+ ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/max1538.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/shared_resource.h:
 C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
@@ -78,5 +93,18 @@ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/shared_resource.h:
 ../Core/Inc/gpio.h:
 ../Core/Inc/main.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
+../Core/Inc/FreeRTOSConfig.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
+../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
+../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
+../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:

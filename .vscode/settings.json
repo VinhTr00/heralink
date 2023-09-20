@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "adc.h": "c"
+        "adc.h": "c",
+        "cmsis_os.h": "c",
+        "stm32g0xx_hal.h": "c",
+        "shared_resource.h": "c",
+        "max1538_driver.h": "c"
     }
 }

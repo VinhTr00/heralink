@@ -8,7 +8,7 @@
 #ifndef _ADC_CONVERT_H_
 #define _ADC_CONVERT_H_
 
-#include "adc_driver.h"
+#include <stdint.h>
 
 typedef enum {
 	ADC_TEMP_AIR,
@@ -46,6 +46,12 @@ typedef enum {
 	CURRENT_CHARGE
 } CurrentID;
 
+typedef struct {
+	uint16_t adc_raw_results[12];
+	uint16_t  voltage_results[5]; //mV
+	uint16_t temperature_results[5];
+	int16_t current_results[2];
+} adc_shared_memory_t;
 
 int AdcTask_init(void);
 uint16_t AdcGet_voltage(VoltageID id);

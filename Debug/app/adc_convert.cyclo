@@ -1,6 +1,6 @@
-../app/adc_convert.c:29:5:AdcTask_init	1
-../app/adc_convert.c:46:10:AdcGet_voltage	1
-../app/adc_convert.c:51:10:AdcGet_temperature	1
-../app/adc_convert.c:56:10:AdcGet_current	1
-../app/adc_convert.c:61:13:AdcTask_main	1
-../app/adc_convert.c:69:13:AdcTask_convert	2
+../app/adc_convert.c:25:5:AdcTask_init	1
+../app/adc_convert.c:42:10:AdcGet_voltage	1
+../app/adc_convert.c:47:10:AdcGet_temperature	1
+../app/adc_convert.c:52:10:AdcGet_current	1
+../app/adc_convert.c:57:13:AdcTask_main	1
+../app/adc_convert.c:65:13:AdcTask_convert	2

@@ -6,6 +6,7 @@
  */
 
 #include "adc_convert.h"
+#include "adc_driver.h"
 #include "adc.h"
 #include "cmsis_os.h"
 
@@ -13,13 +14,6 @@
 #define VDDA            	3.0f
 #define VOLTAGE_SCALE		11
 #define ADC_FULL_SCALE		4095
-
-typedef struct {
-	uint16_t adc_raw_results[12];
-	uint16_t  voltage_results[5]; //mV
-	uint16_t temperature_results[5];
-	int16_t current_results[2];
-} adc_shared_memory_t;
 
 static void AdcTask_main(void *argument);
 static void AdcTask_convert(adc_shared_memory_t *pHandle);

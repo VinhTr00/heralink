@@ -1,0 +1,5 @@
+../app/max1538.c:35:6:Max1538Task_update	1
+../app/max1538.c:42:6:Max1538Task_main	1
+../app/max1538.c:51:5:Max1538_init	1
+../app/max1538.c:64:15:Max1538_release_mode	1
+../app/max1538.c:68:17:Max1538_release_state	1

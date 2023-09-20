@@ -18,14 +18,22 @@
 #define VBAT_MAX		12.5f
 #define V_THRESHOLD		6
 
+typedef struct 
+{
+	MAX1538_STATE_E max1538_state;
+	MAX1538_STATE_E max1538_target_state;
+	BATTERY_CONTROLLER_STATE_E state;
+	adc_shared_memory_t data;
+} BattController_t;
 
-osThreadId_t BattControllerTask;
+static BattController_t BattControl;
+static void BattController_main(void *argument);
+static void BattControllerApp_update(BattController_t* handle);
+
 bool flag_OVC = false, flag_OVV = false;
 
-static void BattController_main(void *argument);
-static void BattControllerApp_update(void);
-
 int BattControllerTask_init(void){
+	osThreadId_t BattControllerTask;
     const osThreadAttr_t BattControlTask_attributes = {
         .name = "BattControlTask",
         .priority = (osPriority_t) osPriorityNormal,
@@ -39,22 +47,22 @@ int BattControllerTask_init(void){
 
 static void BattController_main(void *argument){
 	while (1){
-		float voltage = AdcGet_voltage(VOLTAGE_BAT1)/1000.0;
-		if (voltage > OVER_VOLTAGE) {
-			flag_OVV = true;
-		}
-		else if (voltage > VBAT_MAX){
-			flag_OVV = false;
-//			Max1538_set_state(MAX1538_STATE_CHARGE_B);
-		}
-		else if (voltage > V_THRESHOLD)
-		{
-//			Max1538_set_state(MAX1538_STATE_CHARGE_A);
-		}
-		osDelay(2000);
+		BattControllerApp_update(&BattControl);
+
+		osDelay(pdMS_TO_TICKS(1000));
 	}
 }
 
-static void BattControllerApp_update(void){
+static void BattControllerApp_update(BattController_t* handle){
+	/* update voltage batt A and batt B */
+	for (VoltageID i = VOLTAGE_BAT1; i < VOLTAGE_ADAPTER + 1; i++){
+		handle->data.voltage_results[i] = AdcGet_voltage(i);
+	}
 
+	/* update current */
+	for (CurrentID i = CURRENT_SYS; i < CURRENT_CHARGE + 1; i++){
+		handle->data.current_results[i] = AdcGet_current(i);
+	}
+	/* update state of max1538 */
+	handle->max1538_state = Max1538_release_state();
 }

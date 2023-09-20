@@ -9,6 +9,7 @@
 #include "spi.h"
 #include "cmsis_os.h"
 #include "spi_slave.h"
+#include "spi_driver.h"
 #include "adc_convert.h"
 #include <stdio.h>
 #include <stdbool.h>
@@ -33,7 +34,7 @@ static bool spi_ready = false;
 
 osEventFlagsId_t Slave_ready_id;
 
-enum {
+static enum {
 	WRITE_FLAG,
 	READ_FLAG
 };
@@ -43,7 +44,7 @@ int SlTask_init(void)
 	osThreadId_t SlaveTask;
 	const osThreadAttr_t SlaveTask_attributes = {
 	  .name = "SlaveTask",
-	  .priority = (osPriority_t) osPriorityNormal,
+	  .priority = (osPriority_t) osPriorityHigh,
 	  .stack_size = 128 * 10
 	};
 	SlaveTask = osThreadNew(SlTask_main, NULL, &SlaveTask_attributes);
@@ -60,8 +61,8 @@ static void SlTask_main(void *argument)
 	uint8_t *tempBuffer, len;
 	while (1){
 		/* Test */
-		SlTask_encode(shared_memory);
 		osEventFlagsWait(Slave_ready_id, 0xDD, osFlagsWaitAny, osWaitForever);
+		SlTask_encode(shared_memory);
 		uint8_t flag_decode = SlDecode_register(&RxBuffer[0]);
 		if (flag_decode == WRITE_FLAG){
 			for (uint8_t i = LOW_VOLTAGE_LOW_BYTE; i < BUZZER_ENABLE + 1; i++){

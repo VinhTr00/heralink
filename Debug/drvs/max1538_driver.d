@@ -36,7 +36,8 @@ drvs/max1538_driver.o: ../drvs/max1538_driver.c \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h \
  ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h \
- ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h
+ ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h \
+ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/shared_resource.h
 C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
 ../Core/Inc/stm32g0xx_hal_conf.h:
@@ -75,3 +76,4 @@ C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/max1538_driver.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_tim_ex.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart_ex.h:
+C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/shared_resource.h:

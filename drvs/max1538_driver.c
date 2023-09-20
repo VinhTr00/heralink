@@ -80,20 +80,24 @@ uint8_t Max1538_set_state(Max1538_t* pMax, MAX1538_STATE_E state)
 	return 1;
 }
 
-MAX1538_STATE_E Max1538_get_state(Max1538_t pMax, uint16_t voltage_battA)
+MAX1538_STATE_E Max1538_get_state(Max1538_t* pMax, uint16_t voltage_battA)
 {
-	MAX1538_STATE_E temp_state = Max1538_read_state(pMax);
+	MAX1538_STATE_E temp_state = Max1538_read_state(*pMax);
 	if (temp_state == 0)
 	{
 		if (voltage_battA > UNDERVOL_BATT_A)
 		{
-			return MAX1538_STATE_DISCHARGE_A;
+			temp_state = MAX1538_STATE_DISCHARGE_A;
 		}
 		else 
 		{
-			return MAX1538_STATE_IDLE;
+			temp_state = MAX1538_STATE_IDLE;
 		}
 	}
+	else {
+		temp_state = temp_state + 1;
+	}
+	pMax->current_state = temp_state;
 	return temp_state;
 }
 

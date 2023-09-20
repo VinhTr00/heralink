@@ -8,7 +8,7 @@
 #ifndef _BATTERY_CONTROLLER_H_
 #define _BATTERY_CONTROLLER_H_
 
-#include "max1538.h"
+#include "shared_resource.h"
 
 typedef enum {
 	BATTERY_CONTROLLER_CHARGE_BAT1,
@@ -16,7 +16,7 @@ typedef enum {
 	BATTERY_CONTROLLER_DISCHARGE_BAT1,
 	BATTERY_CONTROLLER_DISCHARGE_BAT2,
 	BATTERY_CONTROLLER_AC_ADAPTER_SEARCH
-} BatteryControllerState;
+} BATTERY_CONTROLLER_STATE_E;
 
 int BattControllerTask_init(void);
 

@@ -8,8 +8,12 @@
 #ifndef _MAX1538_H_
 #define _MAX1538_H_
 
-#include "max1538_driver.h"
+#include <stdint.h>
+#include "shared_resource.h"
 
 int Max1538_init(void);
+BATSEL_MODE_E Max1538_release_mode(void);
+MAX1538_STATE_E Max1538_release_state(void);
+void Max1538_set_mode(MAX1538_STATE_E state);
 
 #endif /* _MAX1538_H_ */

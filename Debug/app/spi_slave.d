@@ -50,8 +50,7 @@ app/spi_slave.o: ../app/spi_slave.c ../Core/Inc/gpio.h ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
  C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/spi_slave.h \
  C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/spi_driver.h \
- C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h \
- C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/adc_driver.h
+ C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h
 ../Core/Inc/gpio.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal.h:
@@ -106,4 +105,3 @@ app/spi_slave.o: ../app/spi_slave.c ../Core/Inc/gpio.h ../Core/Inc/main.h \
 C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/spi_slave.h:
 C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/spi_driver.h:
 C:/Users/Admin/Desktop/VinhTran/heralink/app/inc/adc_convert.h:
-C:/Users/Admin/Desktop/VinhTran/heralink/drvs/inc/adc_driver.h:

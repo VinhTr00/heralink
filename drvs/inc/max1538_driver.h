@@ -9,26 +9,7 @@
 #define _MAX1538_DRIVER_H_
 
 #include <stm32g0xx_hal.h>
-
-typedef enum 
-{
-	MAX1538_STATE_IDLE,
-	MAX1538_STATE_DISCHARGE_A = 0,
-	MAX1538_STATE_DISCHARGE_B,
-	MAX1538_STATE_AC_ADAPTER,
-	MAX1538_STATE_AIRLINE,
-	MAX1538_STATE_RELEARN_A,
-	MAX1538_STATE_RELEARN_B,
-	MAX1538_STATE_CHARGE_A,
-	MAX1538_STATE_CHARGE_B,
-} MAX1538_STATE_E;
-
-typedef enum 
-{
-	BATSEL_MODE_AUTO,
-	BATSEL_MODE_BAT1,
-	BATSEL_MODE_BAT2, 
-} BATSEL_MODE_E;
+#include "shared_resource.h"
 
 typedef struct 
 {
@@ -49,7 +30,7 @@ typedef struct
 } Max1538_t;
 
 uint8_t Max1538_set_state(Max1538_t* pMax, MAX1538_STATE_E state);
-MAX1538_STATE_E Max1538_get_state(Max1538_t pMax, uint16_t voltage_battA);
+MAX1538_STATE_E Max1538_get_state(Max1538_t* pMax, uint16_t voltage_battA);
 BATSEL_MODE_E Max1538_get_mode(Max1538_t *pMax);
 
 #endif /* _MAX1538_DRIVER_H_ */

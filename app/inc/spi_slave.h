@@ -9,7 +9,6 @@
 #define _SPI_SLAVE_H_
 
 #include <stdint.h>
-#include "spi_driver.h"
 
 typedef enum {
 	LOW_VOLTAGE_LOW_BYTE = 0x10,

@@ -10,6 +10,7 @@
 "./Core/Src/syscalls.o"
 "./Core/Src/sysmem.o"
 "./Core/Src/system_stm32g0xx.o"
+"./Core/Src/tim.o"
 "./Core/Src/usart.o"
 "./Core/Startup/startup_stm32g070rbtx.o"
 "./Core/ThreadSafe/newlib_lock_glue.o"

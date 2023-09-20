@@ -2,5 +2,5 @@
 ../drvs/max1538_driver.c:48:9:Max1538_read_state	24	static
 ../drvs/max1538_driver.c:56:15:Max1538_read_batsel	24	static
 ../drvs/max1538_driver.c:72:9:Max1538_set_state	40	static
-../drvs/max1538_driver.c:83:17:Max1538_get_state	48	static
-../drvs/max1538_driver.c:100:15:Max1538_get_mode	32	static
+../drvs/max1538_driver.c:83:17:Max1538_get_state	56	static
+../drvs/max1538_driver.c:104:15:Max1538_get_mode	56	static
