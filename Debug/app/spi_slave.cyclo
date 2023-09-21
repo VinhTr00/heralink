@@ -1,7 +1,0 @@
-../app/spi_slave.c:42:5:SlTask_init	1
-../app/spi_slave.c:57:13:SlTask_main	8
-../app/spi_slave.c:98:13:SlTask_encode	4
-../app/spi_slave.c:123:16:SlDecode_register	2
-../app/spi_slave.c:133:6:HAL_SPI_ErrorCallback	1
-../app/spi_slave.c:146:6:HAL_GPIO_EXTI_Rising_Callback	1
-../app/spi_slave.c:157:6:HAL_GPIO_EXTI_Falling_Callback	1

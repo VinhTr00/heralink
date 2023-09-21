@@ -1,3 +1,0 @@
-../app/battery_controller.c:35:5:BattControllerTask_init	48	static
-../app/battery_controller.c:48:13:BattController_main	16	static
-../app/battery_controller.c:56:13:BattControllerApp_update	32	static

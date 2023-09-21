@@ -1,3 +1,0 @@
-../app/battery_controller.c:35:5:BattControllerTask_init	1
-../app/battery_controller.c:48:13:BattController_main	1
-../app/battery_controller.c:56:13:BattControllerApp_update	3

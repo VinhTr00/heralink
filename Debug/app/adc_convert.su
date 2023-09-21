@@ -1,6 +1,0 @@
-../app/adc_convert.c:25:5:AdcTask_init	48	static
-../app/adc_convert.c:42:10:AdcGet_voltage	16	static
-../app/adc_convert.c:47:10:AdcGet_temperature	16	static
-../app/adc_convert.c:52:10:AdcGet_current	16	static
-../app/adc_convert.c:57:13:AdcTask_main	16	static
-../app/adc_convert.c:65:13:AdcTask_convert	32	static
