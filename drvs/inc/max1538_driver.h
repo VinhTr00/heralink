@@ -29,8 +29,8 @@ typedef struct
 	BATSEL_MODE_E mode;
 } Max1538_t;
 
-uint8_t Max1538_set_state(Max1538_t* pMax, MAX1538_STATE_E state);
+void Max1538_set_state(Max1538_t* pMax);
 MAX1538_STATE_E Max1538_get_state(Max1538_t* pMax, uint16_t voltage_battA);
-BATSEL_MODE_E Max1538_get_mode(Max1538_t *pMax);
+BATSEL_MODE_E Max1538_get_mode_batsel(Max1538_t *pMax);
 
 #endif /* _MAX1538_DRIVER_H_ */

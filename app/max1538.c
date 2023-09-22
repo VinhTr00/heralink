@@ -5,6 +5,7 @@
  *      Author: vinhtran
  */
 
+/* Includes ------------------------------------------------------------------*/
 #include "max1538.h"
 #include "max1538_driver.h"
 #include "gpio.h"
@@ -12,6 +13,7 @@
 #include "cmsis_os.h"
 
 /* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
 static Max1538_t max1538 = {
@@ -29,20 +31,26 @@ static Max1538_t max1538 = {
 };
 
 /* Private function prototypes -----------------------------------------------*/
-static void Max1538Task_main(void);
+static void Max1538Task_main(void *argument);
 static void Max1538Task_update(Max1538_t *pMax);
+
 /* Private functions ---------------------------------------------------------*/
 void Max1538Task_update(Max1538_t *pMax)
 {
 	uint16_t volA = AdcGet_voltage(VOLTAGE_BAT1);
-	Max1538_get_mode(pMax);
+	Max1538_get_mode_batsel(pMax);
 	Max1538_get_state(pMax, volA);	
 }
 
-void Max1538Task_main(void){
+void Max1538Task_main(void *argument){
+	static MAX1538_STATE_E temp_target_state;
 	while (1)
 	{
 		Max1538Task_update(&max1538);
+		if (temp_target_state != max1538.target_state){
+			Max1538_set_state(&max1538);
+			temp_target_state = max1538.target_state;
+		}
 		osDelay(pdMS_TO_TICKS(100));
 	}
 }
@@ -61,10 +69,14 @@ int Max1538_init(void)
 	return 1;
 }
 
-BATSEL_MODE_E Max1538_release_mode(void){
+BATSEL_MODE_E Max1538_release_mode_batsel(void){
 	return max1538.mode;
 }
 
 MAX1538_STATE_E Max1538_release_state(void){
 	return max1538.current_state;
+}
+ 
+void Max1538_configure_state(MAX1538_STATE_E state){
+	max1538.target_state = state;
 }
