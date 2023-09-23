@@ -51,7 +51,7 @@ void Max1538Task_main(void *argument){
 			Max1538_set_state(&max1538);
 			temp_target_state = max1538.target_state;
 		}
-		osDelay(pdMS_TO_TICKS(100));
+		osDelay(pdMS_TO_TICKS(500));
 	}
 }
 
@@ -60,8 +60,8 @@ int Max1538_init(void)
 {
 	osThreadId_t Max1538Task;
     const osThreadAttr_t Max1538Task_attributes = {
-        .name = "Max1538Task",
-        .priority = (osPriority_t) osPriorityNormal1,
+        .name = "Max1538 Task",
+        .priority = (osPriority_t) osPriorityHigh,
         .stack_size = 128 * 4
     };
 	Max1538Task = osThreadNew(Max1538Task_main, NULL, &Max1538Task_attributes);

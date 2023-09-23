@@ -70,10 +70,36 @@ void BattControllerApp_update(BattController_t* handle){
 }
 
 void BattControllerSM_run(BattController_t* handle){
+	uint16_t vol_bat1 = handle->data.voltage_results[VOLTAGE_BAT1];
+	uint16_t vol_bat2 = handle->data.voltage_results[VOLTAGE_BAT2];
+	uint16_t vol_adap = handle->data.voltage_results[VOLTAGE_ADAPTER];
+	static uint8_t t_delayFullBatt = 0;
 	if (handle->batsel_mode == BATSEL_MODE_AUTO)
 	{
-		if (handle->data.voltage_results[VOLTAGE_ADAPTER] >= UNDER_VOLTAGE){
-			if (handle->data.voltage_results[VOLTAGE_BAT1])
+		if (vol_adap >= UNDER_VOLTAGE){
+			if ( (vol_bat1 > (V_THRESHOLD + V_HYS)) && (vol_bat1 < VBAT_MAX) && (vol_bat1 < vol_bat2) ){
+				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT1;
+			}
+			else if ( (vol_bat2 > (V_THRESHOLD + V_HYS)) && (vol_bat2 < VBAT_MAX) && (vol_bat1 > vol_bat2) ){
+				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT2;
+			}
+			// TODO: add Ibatt1 < Ibatt_threshold trong t_delayFullCharge 
+			if ( (vol_bat1 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat1 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT1) ) ){
+				t_delayFullBatt++;
+				if (t_delayFullBatt == T_DELAY_FULLBATT){
+					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+				}
+			}
+			// TODO: add Ibatt2 < Ibatt_threshold trong t_delayFullCharge 
+			else if ( (vol_bat2 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat2 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT2) ) ){
+				t_delayFullBatt++;
+				if (t_delayFullBatt == T_DELAY_FULLBATT){
+					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+				}
+			}
+		}
+		else {
+			if (vol)
 		}
 	}
 }

@@ -25,7 +25,7 @@ int AdcTask_init(void)
 	osThreadId_t AdcTask;
     const osThreadAttr_t AdcTask_attributes = {
         .name = "AdcTask",
-        .priority = (osPriority_t) osPriorityNormal1,
+        .priority = (osPriority_t) osPriorityNormal,
         .stack_size = 128 * 4
     };
 	AdcTask = osThreadNew(AdcTask_main, NULL, &AdcTask_attributes);

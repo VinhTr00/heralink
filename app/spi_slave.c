@@ -44,8 +44,8 @@ int SlTask_init(void)
 	osThreadId_t SlaveTask;
 	const osThreadAttr_t SlaveTask_attributes = {
 	  .name = "SlaveTask",
-	  .priority = (osPriority_t) osPriorityHigh,
-	  .stack_size = 128 * 10
+	  .priority = (osPriority_t) osPriorityNormal,
+	  .stack_size = 128 * 5
 	};
 	SlaveTask = osThreadNew(SlTask_main, NULL, &SlaveTask_attributes);
 	Slave_ready_id = osEventFlagsNew(NULL);

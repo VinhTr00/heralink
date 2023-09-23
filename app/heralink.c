@@ -17,6 +17,7 @@ int heralink_main_init (void)
 	AdcTask_init();
 	SlTask_init();
 	BattControllerTask_init();
+	Max1538_init();
 
 	return 1;
 }
