@@ -10,7 +10,7 @@
 
 #include <stdint.h>
 
-int heralink_main_init (void);
+void heralink_main_init (void);
 
 
 #endif /* _HERALINK_H_ */

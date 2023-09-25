@@ -56,7 +56,7 @@ void Max1538Task_main(void *argument){
 }
 
 /* Public functions ---------------------------------------------------------*/
-int Max1538_init(void)
+void Max1538_init(void)
 {
 	osThreadId_t Max1538Task;
     const osThreadAttr_t Max1538Task_attributes = {
@@ -66,7 +66,6 @@ int Max1538_init(void)
     };
 	Max1538Task = osThreadNew(Max1538Task_main, NULL, &Max1538Task_attributes);
 	(void)Max1538Task;
-	return 1;
 }
 
 BATSEL_MODE_E Max1538_release_mode_batsel(void){

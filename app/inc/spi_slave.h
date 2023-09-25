@@ -50,7 +50,7 @@ typedef enum {
 } SlaveSPIMode;
 
 
-int SlTask_init(void);
+void SlTask_init(void);
 uint8_t SlTask_get_configuration(void);
 uint8_t SlTask_set_configuration(void);
 

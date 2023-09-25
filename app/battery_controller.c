@@ -21,7 +21,6 @@ typedef struct
 	BATSEL_MODE_E batsel_mode;
 	BATTERY_CONTROLLER_STATE_E control_state;
 	adc_shared_memory_t data;
-
 } BattController_t;
 
 /* Private define ------------------------------------------------------------*/
@@ -41,14 +40,14 @@ static BattController_t BattControl;
 static void BattController_main(void *argument);
 static void BattControllerApp_update(BattController_t* handle);
 static void BattControllerSM_run(BattController_t* handle);
-static void BattController_AutoMode(BattController_t* handle);
+// static void BattController_AutoMode(BattController_t* handle);
 
 
 /* Private functions ---------------------------------------------------------*/
 void BattController_main(void *argument){
 	while (1){
 		BattControllerApp_update(&BattControl);
-		
+		BattControllerSM_run(&BattControl);
 		osDelay(pdMS_TO_TICKS(1000));
 	}
 }
@@ -76,45 +75,98 @@ void BattControllerSM_run(BattController_t* handle){
 	static uint8_t t_delayFullBatt = 0;
 	if (handle->batsel_mode == BATSEL_MODE_AUTO)
 	{
-		if (vol_adap >= UNDER_VOLTAGE){
-			if ( (vol_bat1 > (V_THRESHOLD + V_HYS)) && (vol_bat1 < VBAT_MAX) && (vol_bat1 < vol_bat2) ){
+		if (vol_adap >= UNDER_VOLTAGE)
+		{
+			if ( (vol_bat1 > (V_THRESHOLD + V_HYS)) && (vol_bat1 < VBAT_MAX) && (vol_bat1 < vol_bat2) )
+			{
 				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT1;
 			}
-			else if ( (vol_bat2 > (V_THRESHOLD + V_HYS)) && (vol_bat2 < VBAT_MAX) && (vol_bat1 > vol_bat2) ){
+			else if ( (vol_bat2 > (V_THRESHOLD + V_HYS)) && (vol_bat2 < VBAT_MAX) && (vol_bat1 > vol_bat2) )
+			{
 				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT2;
 			}
 			// TODO: add Ibatt1 < Ibatt_threshold trong t_delayFullCharge 
-			if ( (vol_bat1 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat1 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT1) ) ){
+			if ( (vol_bat1 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat1 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT1) ) )
+			{
 				t_delayFullBatt++;
-				if (t_delayFullBatt == T_DELAY_FULLBATT){
+				if (t_delayFullBatt == T_DELAY_FULLBATT)
+				{
 					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
 				}
 			}
 			// TODO: add Ibatt2 < Ibatt_threshold trong t_delayFullCharge 
-			else if ( (vol_bat2 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat2 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT2) ) ){
+			else if ( (vol_bat2 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat2 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT2) ) )
+			{
 				t_delayFullBatt++;
-				if (t_delayFullBatt == T_DELAY_FULLBATT){
+				if (t_delayFullBatt == T_DELAY_FULLBATT)
+				{
 					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
 				}
 			}
 		}
-		else {
-			if (vol)
+		else 
+		{
+			if ( (vol_bat1 <= vol_bat2) && (vol_bat1 >= UNDER_VOLTAGE) )
+			{
+				handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT1;
+			}
+			else if ( (vol_bat1 > vol_bat2) && (vol_bat2 >= UNDER_VOLTAGE) ){
+
+				handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT2;
+			}
+			else 
+			{
+				handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+			}
+		}
+	}
+	else if (handle->batsel_mode == BATSEL_MODE_BAT1)
+	{
+		if (vol_adap >= UNDER_VOLTAGE)
+		{
+			if ( (vol_bat1 > (V_THRESHOLD + V_HYS)) && (vol_bat1 < VBAT_MAX))
+			{
+				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT1;
+			}
+			else if ( (vol_bat1 < V_THRESHOLD) || (VBAT_MAX - vol_bat1 < 10) )
+			{
+				handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+			}
+		}
+		else 
+		{
+			handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT1;
+		}
+	}
+	else 
+	{
+		if (vol_adap >= UNDER_VOLTAGE)
+		{
+			if ( (vol_bat2 > (V_THRESHOLD + V_HYS)) && (vol_bat2 < VBAT_MAX))
+			{
+				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT2;
+			}
+			else if ( (vol_bat2 < V_THRESHOLD) || (VBAT_MAX - vol_bat2 < 10) )
+			{
+				handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+			}
+		}
+		else 
+		{
+			handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT2;
 		}
 	}
 }
 
 /* Public functions ---------------------------------------------------------*/
-int BattControllerTask_init(void){
+void BattControllerTask_init(void){
 	osThreadId_t BattControllerTask;
-    const osThreadAttr_t BattControlTask_attributes = {
+    const osThreadAttr_t BattControlTask_attr = {
         .name = "BattControlTask",
         .priority = (osPriority_t) osPriorityNormal,
         .stack_size = 128 * 4
     };
-    BattControllerTask = osThreadNew(BattController_main, NULL, &BattControlTask_attributes);
+    BattControllerTask = osThreadNew(BattController_main, NULL, &BattControlTask_attr);
 	(void)BattControllerTask;
-
-	return 1;
 }
 

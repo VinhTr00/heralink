@@ -53,7 +53,7 @@ typedef struct {
 	int16_t current_results[2];
 } adc_shared_memory_t;
 
-int AdcTask_init(void);
+void AdcTask_init(void);
 uint16_t AdcGet_voltage(VoltageID id);
 uint16_t AdcGet_temperature(TemperatureID id);
 uint16_t AdcGet_current(CurrentID id);

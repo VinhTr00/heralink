@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include "shared_resource.h"
 
-int Max1538_init(void);
+void Max1538_init(void);
 BATSEL_MODE_E Max1538_release_mode_batsel(void);
 MAX1538_STATE_E Max1538_release_state(void);
 void Max1538_configure_state(MAX1538_STATE_E state);

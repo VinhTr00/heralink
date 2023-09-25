@@ -18,6 +18,6 @@ typedef enum {
 	BATTERY_CONTROLLER_AC_ADAPTER_SEARCH
 } BATTERY_CONTROLLER_STATE_E;
 
-int BattControllerTask_init(void);
+void BattControllerTask_init(void);
 
 #endif /* _BATTERY_CONTROLLER_H_ */

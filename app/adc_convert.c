@@ -20,7 +20,7 @@ static void AdcTask_convert(adc_shared_memory_t *pHandle);
 
 static adc_shared_memory_t handle_adc;
 
-int AdcTask_init(void)
+void AdcTask_init(void)
 {
 	osThreadId_t AdcTask;
     const osThreadAttr_t AdcTask_attributes = {
@@ -33,8 +33,6 @@ int AdcTask_init(void)
 
     ADC_Calibrate(&hadc1);
     ADC_Start(&hadc1, (uint32_t *)handle_adc.adc_raw_results, 5);
-
-    return 1;
 }
 
 uint16_t AdcGet_voltage(VoltageID id)
@@ -56,14 +54,14 @@ static void AdcTask_main(void *argument){
     while (1)
     {
         AdcTask_convert(&handle_adc);
-        osDelay(1000);
+        osDelay(pdMS_TO_TICKS(1000));
     }
 }
 
 static void AdcTask_convert(adc_shared_memory_t *pHandle){
     pHandle->voltage_results[VOLTAGE_VREFINT] = VDDA*VREFINT_CAL*1000/pHandle->adc_raw_results[4];
 
-    for (uint8_t i = VOLTAGE_BAT1; i < VOLTAGE_ADAPTER ; i++){
+    for (uint8_t i = VOLTAGE_BAT1; i < VOLTAGE_ADAPTER + 1; i++){
         pHandle->voltage_results[i] = pHandle->adc_raw_results[i] * pHandle->voltage_results[VOLTAGE_VREFINT] * VOLTAGE_SCALE/ADC_FULL_SCALE;
     }
     /*

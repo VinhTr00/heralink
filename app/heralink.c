@@ -12,12 +12,10 @@
 #include "max1538.h"
 #include "adc_convert.h"
 
-int heralink_main_init (void)
+void heralink_main_init (void)
 {
 	AdcTask_init();
 	SlTask_init();
 	BattControllerTask_init();
 	Max1538_init();
-
-	return 1;
 }

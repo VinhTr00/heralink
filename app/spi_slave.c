@@ -39,19 +39,17 @@ static enum {
 	READ_FLAG
 };
 
-int SlTask_init(void)
+void SlTask_init(void)
 {
 	osThreadId_t SlaveTask;
 	const osThreadAttr_t SlaveTask_attributes = {
 	  .name = "SlaveTask",
 	  .priority = (osPriority_t) osPriorityNormal,
-	  .stack_size = 128 * 5
+	  .stack_size = 128 * 4
 	};
 	SlaveTask = osThreadNew(SlTask_main, NULL, &SlaveTask_attributes);
 	Slave_ready_id = osEventFlagsNew(NULL);
 	(void)SlaveTask;
-
-	return 1;
 }
 
 static void SlTask_main(void *argument)
