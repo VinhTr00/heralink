@@ -17,4 +17,4 @@ MAX1538_STATE_E Max1538_release_state(void);
 void Max1538_configure_state(MAX1538_STATE_E state);
 
 #endif /* _MAX1538_H_ */
-    
+

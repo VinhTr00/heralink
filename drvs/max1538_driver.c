@@ -40,6 +40,9 @@ void Max1538_write_input(Max1538_t *pMax)
 			HAL_GPIO_WritePin(pMax->max1538_Port, pMax->MaxCHG, 0);
 			HAL_GPIO_WritePin(pMax->max1538_Port, pMax->MaxBATSEL, 1);
 			break;
+		case MAX1538_STATE_AC_ADAPTER:
+			HAL_GPIO_WritePin(pMax->max1538_Port, pMax->MaxCHG, 0);
+			HAL_GPIO_WritePin(pMax->max1538_Port, pMax->MaxBATSEL, 0);
 		default:
 			break;
 	}
@@ -50,7 +53,8 @@ uint8_t Max1538_read_state(Max1538_t pxMax)
 	uint8_t out0 = HAL_GPIO_ReadPin(pxMax.max1538_out_Port, pxMax.MaxOUT0);
 	uint8_t out1 = HAL_GPIO_ReadPin(pxMax.max1538_out_Port, pxMax.MaxOUT1);
 	uint8_t out2 = HAL_GPIO_ReadPin(pxMax.max1538_out_Port, pxMax.MaxOUT2);
-	return ((out2 << 2) & (out1 << 1) & out0);
+	
+	return ((out2 << 2) | (out1 << 1) | out0);
 }
 
 BATSEL_MODE_E Max1538_read_batsel(Max1538_t pxMax)
