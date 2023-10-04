@@ -11,6 +11,7 @@
 #include "adc_convert.h"
 #include "gpio.h"
 #include "max1538.h"
+#include "battery.h"
 #include <stdbool.h>
 
 /* Private typedef -----------------------------------------------------------*/
@@ -24,20 +25,21 @@ typedef struct
 } BattController_t;
 
 /* Private define ------------------------------------------------------------*/
-#define OVER_VOLTAGE			20000	//mV
-#define UNDER_VOLTAGE			12500	//mV
+
 #define VBAT_MAX				16800	//mV
-#define V_THRESHOLD				6000	//mV
+#define V_THRESHOLD				13000	//mV
 #define V_HYS					100		//mV	
 #define T_DELAY_FULLBATT 		4		//s
 #define T_DELAY_FULLCHARGE		4		//s
 
 
 /* Private variables ---------------------------------------------------------*/
-static BattController_t BattControl;
+static BattController_t BattControl = {
+	.control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH
+};
 
 /* Private function prototypes -----------------------------------------------*/
-static void BattController_main(void *argument);
+static void BattController_main(void* argument);
 static void BattControllerApp_update(BattController_t* handle);
 static void BattControllerSM_run(BattController_t* handle);
 // static void BattController_AutoMode(BattController_t* handle);
@@ -48,7 +50,7 @@ void BattController_main(void *argument){
 	while (1){
 		BattControllerApp_update(&BattControl);
 		BattControllerSM_run(&BattControl);
-		osDelay(pdMS_TO_TICKS(1000));
+		osDelay(pdMS_TO_TICKS(500));
 	}
 }
 
@@ -73,62 +75,89 @@ void BattControllerSM_run(BattController_t* handle){
 	uint16_t vol_bat2 = handle->data.voltage_results[VOLTAGE_BAT2];
 	uint16_t vol_adap = handle->data.voltage_results[VOLTAGE_ADAPTER];
 	static uint8_t t_delayFullBatt = 0;
+	static uint8_t temp_controlState = 0;
+	static uint8_t flag_charge = 0;
+	static uint8_t flag_discharge = 0;
 	if (handle->batsel_mode == BATSEL_MODE_AUTO)
 	{
 		if (vol_adap >= UNDER_VOLTAGE)
 		{
-			if ( (vol_bat1 > (V_THRESHOLD + V_HYS)) && (vol_bat1 < VBAT_MAX) && (vol_bat1 < vol_bat2) )
+			flag_discharge = 0;
+			if (flag_charge == 0)
 			{
-				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT1;
-			}
-			else if ( (vol_bat2 > (V_THRESHOLD + V_HYS)) && (vol_bat2 < VBAT_MAX) && (vol_bat1 > vol_bat2) )
-			{
-				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT2;
-			}
-			// TODO: add Ibatt1 < Ibatt_threshold trong t_delayFullCharge 
-			if ( (vol_bat1 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat1 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT1) ) )
-			{
-				t_delayFullBatt++;
-				if (t_delayFullBatt == T_DELAY_FULLBATT)
+				if ((vol_bat1 < vol_bat2 || vol_bat2 < UNDER_VOLTAGE)  && vol_bat1 > (V_THRESHOLD + V_HYS) && (VBAT_MAX - vol_bat1 > 100) )
+				{
+					flag_charge = 1;
+					handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT1;
+				}
+				else if ((vol_bat1 > vol_bat2 || vol_bat1 < UNDER_VOLTAGE) && vol_bat2 > (V_THRESHOLD + V_HYS) && (VBAT_MAX - vol_bat2 > 100))
+				{
+					flag_charge = 2;
+					handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT2;
+				}
+				else
 				{
 					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
 				}
 			}
-			// TODO: add Ibatt2 < Ibatt_threshold trong t_delayFullCharge 
-			else if ( (vol_bat2 < V_THRESHOLD) || ( (VBAT_MAX - vol_bat2 < 10) && (handle->control_state == BATTERY_CONTROLLER_CHARGE_BAT2) ) )
+			// TODO: add Ibatt1 < Ibatt_threshold trong t_delayFullCharge 
+			if ( ( (vol_bat1 < UNDER_VOLTAGE) ||  (VBAT_MAX - vol_bat1 < 100) ) && (flag_charge == 1) )
 			{
 				t_delayFullBatt++;
 				if (t_delayFullBatt == T_DELAY_FULLBATT)
 				{
 					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+					t_delayFullBatt = 0;
+					flag_charge = 0;
+				}
+			}
+			// TODO: add Ibatt2 < Ibatt_threshold trong t_delayFullCharge 
+			else if ( ( (vol_bat2 < UNDER_VOLTAGE) ||  (VBAT_MAX - vol_bat2 < 100) ) && (flag_charge == 2) )
+			{
+				t_delayFullBatt++;
+				if (t_delayFullBatt == T_DELAY_FULLBATT)
+				{
+					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+					t_delayFullBatt = 0;
+					flag_charge = 0;
 				}
 			}
 		}
 		else 
 		{
-			if ( (vol_bat1 <= vol_bat2) && (vol_bat1 >= UNDER_VOLTAGE) )
+			flag_charge = 0;
+			if (flag_discharge == 0)
 			{
-				handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT1;
+				if ((vol_bat1 < vol_bat2 || vol_bat2 < UNDER_VOLTAGE) && vol_bat1 > (V_THRESHOLD + V_HYS))
+				{
+					flag_discharge = 1;
+					handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT1;
+				}
+				else if ((vol_bat2 < vol_bat1 || vol_bat1 < UNDER_VOLTAGE) && vol_bat2 > (V_THRESHOLD + V_HYS))
+				{
+					flag_discharge = 2;
+					handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT2;
+				}
+				else 
+				{
+					handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
+				}
 			}
-			else if ( (vol_bat1 > vol_bat2) && (vol_bat2 >= UNDER_VOLTAGE) ){
-
-				handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT2;
-			}
-			else 
-			{
-				handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
-			}
+			if (flag_discharge == 1 && vol_bat1 < UNDER_VOLTAGE) flag_discharge = 0;
+			else if (flag_discharge == 2 && vol_bat2 < UNDER_VOLTAGE) flag_discharge = 0;
 		}
 	}
 	else if (handle->batsel_mode == BATSEL_MODE_BAT1)
 	{
+		flag_discharge = 0;
+		flag_charge = 0;
 		if (vol_adap >= UNDER_VOLTAGE)
 		{
 			if ( (vol_bat1 > (V_THRESHOLD + V_HYS)) && (vol_bat1 < VBAT_MAX))
 			{
 				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT1;
 			}
-			else if ( (vol_bat1 < V_THRESHOLD) || (VBAT_MAX - vol_bat1 < 10) )
+			else if ( (vol_bat1 < UNDER_VOLTAGE) || (VBAT_MAX - vol_bat1 < 10) )
 			{
 				handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
 			}
@@ -140,13 +169,15 @@ void BattControllerSM_run(BattController_t* handle){
 	}
 	else 
 	{
+		flag_discharge = 0;
+		flag_charge = 0;
 		if (vol_adap >= UNDER_VOLTAGE)
 		{
 			if ( (vol_bat2 > (V_THRESHOLD + V_HYS)) && (vol_bat2 < VBAT_MAX))
 			{
 				handle->control_state = BATTERY_CONTROLLER_CHARGE_BAT2;
 			}
-			else if ( (vol_bat2 < V_THRESHOLD) || (VBAT_MAX - vol_bat2 < 10) )
+			else if ( (vol_bat2 < UNDER_VOLTAGE) || (VBAT_MAX - vol_bat2 < 10) )
 			{
 				handle->control_state = BATTERY_CONTROLLER_AC_ADAPTER_SEARCH;
 			}
@@ -155,6 +186,30 @@ void BattControllerSM_run(BattController_t* handle){
 		{
 			handle->control_state = BATTERY_CONTROLLER_DISCHARGE_BAT2;
 		}
+	}
+	if (temp_controlState != handle->control_state)
+	{
+		switch (handle->control_state)
+		{
+			case BATTERY_CONTROLLER_CHARGE_BAT1:
+				Max1538_configure_state(MAX1538_STATE_CHARGE_A);
+				break;
+			case BATTERY_CONTROLLER_CHARGE_BAT2:
+				Max1538_configure_state(MAX1538_STATE_CHARGE_B);
+				break;
+			case BATTERY_CONTROLLER_DISCHARGE_BAT1:
+				Max1538_configure_state(MAX1538_STATE_DISCHARGE_A);
+				break;
+			case BATTERY_CONTROLLER_DISCHARGE_BAT2:
+				Max1538_configure_state(MAX1538_STATE_DISCHARGE_B);
+				break;
+			case BATTERY_CONTROLLER_AC_ADAPTER_SEARCH:
+				Max1538_configure_state(MAX1538_STATE_AC_ADAPTER);
+				break;
+			default:
+				break;
+		}
+		temp_controlState = handle->control_state;
 	}
 }
 
@@ -169,4 +224,3 @@ void BattControllerTask_init(void){
     BattControllerTask = osThreadNew(BattController_main, NULL, &BattControlTask_attr);
 	(void)BattControllerTask;
 }
-
